@@ -3,48 +3,462 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>cfloss: a better floss pick is almost here</title>
-  <meta name="description" content="A better floss pick is almost here. Leave your email to hear when it drops.">
-  <meta name="theme-color" content="#f7faf8">
+  <title>cfloss — Coming Soon</title>
+  <meta name="description" content="cfloss is almost here. A better floss pick. Join the waitlist to hear when it drops.">
+  <meta name="theme-color" content="#EAF7F0">
   <link rel="canonical" href="https://cfloss.com/">
-  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/favicon.svg?v=3" type="image/svg+xml">
 
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://cfloss.com/">
-  <meta property="og:title" content="cfloss: a better floss pick is almost here">
-  <meta property="og:description" content="Be the first to know when it drops.">
+  <meta property="og:title" content="cfloss is almost here">
+  <meta property="og:description" content="A better floss pick. Be the first to know when it drops.">
   <meta name="twitter:card" content="summary">
 
+  <link rel="preload" href="/fonts/archivo-expanded-800-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/fonts/hanken-grotesk-latin.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="/styles.css">
-  <script src="/script.js" defer></script>
+
+  <!-- Styles are inline on purpose: a cached stylesheet can't mismatch this HTML. -->
+  <style>
+    @font-face {
+      font-family: "Archivo Expanded";
+      src: url("/fonts/archivo-expanded-800-latin.woff2") format("woff2");
+      font-weight: 800;
+      font-display: swap;
+    }
+
+    @font-face {
+      font-family: "Hanken Grotesk";
+      src: url("/fonts/hanken-grotesk-latin.woff2") format("woff2");
+      font-weight: 100 900;
+      font-display: swap;
+    }
+
+    :root {
+      --bg: #EAF7F0;
+      --fg: #0F2A24;
+      --muted: #3F5751;
+      --mint: #7EE8C0;
+      --deco: #9FE5C7;
+      --deco-stripe: #2FBF88;
+      --deco-stroke: rgba(15, 42, 36, 0.14);
+      --input-border: rgba(15, 42, 36, 0.32);
+      --success: #1D6B52;
+      --error: #B42318;
+      --font-display: "Archivo Expanded", "Arial Black", sans-serif;
+      --font-body: "Hanken Grotesk", ui-sans-serif, system-ui, sans-serif;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      -webkit-text-size-adjust: 100%;
+    }
+
+    [hidden] {
+      display: none !important;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      min-height: 100svh;
+      overflow-x: hidden;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: var(--font-body);
+      line-height: 1.5;
+      caret-color: var(--fg);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    ::selection {
+      background: var(--mint);
+      color: var(--fg);
+    }
+
+    a {
+      color: inherit;
+      text-underline-offset: 0.2em;
+    }
+
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
+    }
+
+    /* Logo */
+    .logo {
+      position: absolute;
+      top: 20px;
+      left: 24px;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--fg);
+      text-decoration: none;
+    }
+
+    .logo svg {
+      width: 40px;
+      height: 40px;
+      flex: none;
+    }
+
+    .logo-name {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 17px;
+      letter-spacing: -0.01em;
+    }
+
+    .logo:focus-visible {
+      outline: 2px solid var(--fg);
+      outline-offset: 4px;
+      border-radius: 6px;
+    }
+
+    /* Hero */
+    .upper {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 120px 24px 56px;
+      text-align: center;
+    }
+
+    .headline {
+      max-width: 14ch;
+      margin-bottom: 22px;
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: clamp(1.875rem, 11vw, 6rem);
+      line-height: 1;
+      letter-spacing: -0.03em;
+      text-wrap: balance;
+    }
+
+    .subtext {
+      max-width: 26rem;
+      text-wrap: balance;
+      margin-bottom: 40px;
+      font-size: clamp(1rem, 1.5vw, 1.1875rem);
+      color: var(--muted);
+    }
+
+    .form-row {
+      display: flex;
+      gap: 8px;
+      width: 100%;
+      max-width: 30rem;
+    }
+
+    .form-row input {
+      flex: 1;
+      min-width: 0;
+      height: 52px;
+      padding: 0 18px;
+      border: 1.5px solid var(--input-border);
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.55);
+      color: var(--fg);
+      font: inherit;
+      font-size: 16px;
+      transition: border-color 0.2s;
+    }
+
+    .form-row input::placeholder {
+      color: #566c66;
+    }
+
+    .form-row input:hover {
+      border-color: rgba(15, 42, 36, 0.5);
+    }
+
+    .form-row input:focus {
+      border-color: var(--fg);
+      outline: 2px solid var(--fg);
+      outline-offset: 2px;
+    }
+
+    .form-row button {
+      flex: none;
+      height: 52px;
+      padding: 0 24px;
+      border: 0;
+      border-radius: 4px;
+      background: var(--fg);
+      color: var(--bg);
+      font: inherit;
+      font-size: 16px;
+      font-weight: 600;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: background-color 0.15s, transform 0.1s;
+    }
+
+    .form-row button:hover {
+      background: #1d4a40;
+    }
+
+    .form-row button:active {
+      transform: scale(0.98);
+    }
+
+    .form-row button:focus-visible {
+      outline: 2px solid var(--fg);
+      outline-offset: 2px;
+    }
+
+    .form-row button:disabled {
+      opacity: 0.7;
+      cursor: progress;
+    }
+
+    .note {
+      margin-top: 16px;
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    .status:empty {
+      display: none;
+    }
+
+    .status {
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--success);
+    }
+
+    .status.is-error {
+      margin-top: 14px;
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--error);
+    }
+
+    /* Decorative band */
+    .deco-section {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 26vh;
+      overflow: hidden;
+    }
+
+    .strand {
+      display: block;
+      width: 100%;
+      height: 48px;
+      flex: none;
+    }
+
+    .stripe {
+      height: 10px;
+      flex: none;
+      background: var(--deco-stripe);
+    }
+
+    .grid-floor {
+      position: relative;
+      flex: 1;
+      min-height: 80px;
+      background: var(--deco);
+    }
+
+    .grid-floor svg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* Footer bar */
+    .bar {
+      flex: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      padding: 14px 24px;
+      background: var(--fg);
+      color: var(--bg);
+      font-size: 14px;
+    }
+
+    .bar a:focus-visible {
+      outline: 2px solid var(--mint);
+      outline-offset: 3px;
+    }
+
+    @media (max-width: 600px) {
+      .logo {
+        top: 16px;
+        left: 16px;
+        gap: 10px;
+      }
+
+      .logo svg {
+        width: 34px;
+        height: 34px;
+      }
+
+      .logo-name {
+        font-size: 15px;
+      }
+
+      .bar {
+        padding: 14px 16px;
+      }
+
+      .upper {
+        padding: 104px 16px 44px;
+      }
+
+      .form-row {
+        flex-direction: column;
+      }
+
+      .form-row input {
+        flex: none;
+        width: 100%;
+      }
+
+      .form-row button {
+        width: 100%;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .form-row button {
+        transition: none;
+      }
+    }
+  </style>
 </head>
 <body>
-  <header>
-    <a class="wordmark" href="/">cfloss</a>
-  </header>
+  <a class="logo" href="/" aria-label="cfloss home">
+    <svg viewBox="0 0 64 64" aria-hidden="true">
+      <rect width="64" height="64" rx="16" fill="#7EE8C0"/>
+      <path d="M41.5 24.5a12 12 0 1 0 0 15" fill="none" stroke="#0F2A24" stroke-width="6" stroke-linecap="round"/>
+    </svg>
+    <span class="logo-name">cfloss</span>
+  </a>
 
-  <main class="waitlist">
-    <h1>A better floss pick is almost here.</h1>
-    <p class="lede">Be the first to know when it drops.</p>
+  <main class="upper">
+    <h1 class="headline">cfloss is almost here</h1>
+    <p class="subtext">A better floss pick. Be the first to know when it drops.</p>
 
-    <!-- Posts straight to the Google Form. script.js submits it in the background;
+    <!-- Posts straight to the Google Form. The script below submits it in the background;
          without JS it still works and opens Google's confirmation in a new tab. -->
-    <form class="signup" id="signup"
+    <form class="form-row" id="waitlist-form"
           action="https://docs.google.com/forms/d/e/1FAIpQLScYllanWckgM9KM1eDlfgDfEXJFy0kvAJVUbbHLtrICu1BFJQ/formResponse"
           method="POST" target="_blank">
       <label class="visually-hidden" for="email">Email address</label>
       <input id="email" name="entry.353446030" type="email" required
              autocomplete="email" inputmode="email" spellcheck="false"
-             placeholder="Email address">
-      <button type="submit">Notify me</button>
+             placeholder="Your email address">
+      <button type="submit">Join the waitlist</button>
     </form>
+    <p class="note" id="note">One email when it drops. Nothing else.</p>
 
     <p class="status" id="status" role="status" aria-live="polite"></p>
   </main>
 
-  <footer>
-    <p>© 2026 cfloss · <a href="/privacy/">Privacy</a></p>
+  <div class="deco-section" aria-hidden="true">
+    <svg class="strand" viewBox="0 0 1440 48" preserveAspectRatio="none">
+      <path d="M0 24 C45 4 135 4 180 24 S315 44 360 24 S495 4 540 24 S675 44 720 24 S855 4 900 24 S1035 44 1080 24 S1215 4 1260 24 S1395 44 1440 24"
+            fill="none" stroke="#0F2A24" stroke-opacity="0.35" stroke-width="1.5" vector-effect="non-scaling-stroke"/>
+    </svg>
+
+    <div class="stripe"></div>
+
+    <div class="grid-floor">
+      <svg viewBox="0 0 1280 400" preserveAspectRatio="none">
+        <g stroke="rgba(15, 42, 36, 0.14)" stroke-width="1" fill="none" vector-effect="non-scaling-stroke">
+          <line x1="640" y1="0" x2="0" y2="400"/>
+          <line x1="640" y1="0" x2="128" y2="400"/>
+          <line x1="640" y1="0" x2="256" y2="400"/>
+          <line x1="640" y1="0" x2="384" y2="400"/>
+          <line x1="640" y1="0" x2="512" y2="400"/>
+          <line x1="640" y1="0" x2="640" y2="400"/>
+          <line x1="640" y1="0" x2="768" y2="400"/>
+          <line x1="640" y1="0" x2="896" y2="400"/>
+          <line x1="640" y1="0" x2="1024" y2="400"/>
+          <line x1="640" y1="0" x2="1152" y2="400"/>
+          <line x1="640" y1="0" x2="1280" y2="400"/>
+          <line x1="0" y1="60" x2="1280" y2="60"/>
+          <line x1="0" y1="140" x2="1280" y2="140"/>
+          <line x1="0" y1="240" x2="1280" y2="240"/>
+          <line x1="0" y1="360" x2="1280" y2="360"/>
+        </g>
+      </svg>
+    </div>
+  </div>
+
+  <footer class="bar">
+    <span>© 2026 cfloss</span>
+    <a href="/privacy/">Privacy</a>
   </footer>
+
+  <script>
+    // Submits the form to Google Forms in the background. Google sends no CORS
+    // headers, so the request is "no-cors": we know it was sent, not Google's reply.
+    (function () {
+      var form = document.getElementById("waitlist-form");
+      var note = document.getElementById("note");
+      var status = document.getElementById("status");
+      var button = form.querySelector("button");
+      var FORM_LINK = "https://docs.google.com/forms/d/e/1FAIpQLScYllanWckgM9KM1eDlfgDfEXJFy0kvAJVUbbHLtrICu1BFJQ/viewform";
+
+      form.addEventListener("submit", function (event) {
+        event.preventDefault();
+        if (!form.checkValidity()) {
+          form.reportValidity();
+          return;
+        }
+
+        button.disabled = true;
+        button.textContent = "Joining…";
+        status.className = "status";
+        status.textContent = "";
+
+        fetch(form.action, {
+          method: "POST",
+          mode: "no-cors",
+          body: new URLSearchParams(new FormData(form))
+        }).then(function () {
+          form.hidden = true;
+          note.hidden = true;
+          status.textContent = "You’re on the list. We’ll email you when cfloss drops.";
+        }).catch(function () {
+          var link = document.createElement("a");
+          link.href = FORM_LINK;
+          link.target = "_blank";
+          link.rel = "noopener";
+          link.textContent = "sign up here";
+          status.className = "status is-error";
+          status.replaceChildren("That didn’t go through. Try again, or ", link, ".");
+          button.disabled = false;
+          button.textContent = "Join the waitlist";
+        });
+      });
+    })();
+  </script>
 </body>
 </html>
