@@ -4,9 +4,7 @@
 
 const form = document.getElementById("signup");
 const status = document.getElementById("status");
-const finePrint = document.getElementById("fine-print");
 const button = form.querySelector("button");
-const label = button.querySelector(".label");
 
 const FORM_LINK =
   "https://docs.google.com/forms/d/e/1FAIpQLScYllanWckgM9KM1eDlfgDfEXJFy0kvAJVUbbHLtrICu1BFJQ/viewform";
@@ -15,7 +13,7 @@ form.addEventListener("submit", async (event) => {
   event.preventDefault();
 
   button.disabled = true;
-  label.textContent = "Joining…";
+  button.textContent = "Sending…";
   status.className = "status";
   status.replaceChildren();
 
@@ -25,41 +23,19 @@ form.addEventListener("submit", async (event) => {
       mode: "no-cors",
       body: new URLSearchParams(new FormData(form)),
     });
-    showSuccess();
+    form.hidden = true;
+    status.className = "status is-success";
+    status.textContent = "You’re on the list. We’ll email you when it drops.";
   } catch {
-    showError();
+    const link = document.createElement("a");
+    link.href = FORM_LINK;
+    link.target = "_blank";
+    link.rel = "noopener";
+    link.textContent = "sign up here";
+
+    status.className = "status is-error";
+    status.replaceChildren("That didn’t go through. Try again, or ", link, ".");
     button.disabled = false;
-    label.textContent = "Join";
+    button.textContent = "Notify me";
   }
 });
-
-function showSuccess() {
-  form.hidden = true;
-  finePrint.hidden = true;
-
-  const check = document.createElement("div");
-  check.className = "check";
-  check.setAttribute("aria-hidden", "true");
-  check.textContent = "✓";
-
-  const text = document.createElement("div");
-  const title = document.createElement("strong");
-  title.textContent = "You’re on the list.";
-  const detail = document.createElement("span");
-  detail.textContent = "We’ll email you when it drops.";
-  text.append(title, detail);
-
-  status.className = "status is-success";
-  status.replaceChildren(check, text);
-}
-
-function showError() {
-  const link = document.createElement("a");
-  link.href = FORM_LINK;
-  link.target = "_blank";
-  link.rel = "noopener";
-  link.textContent = "sign up here";
-
-  status.className = "status is-error";
-  status.replaceChildren("Something went wrong. Try again, or ", link, ".");
-}
